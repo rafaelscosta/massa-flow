@@ -1,0 +1,247 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f2f5;
+  padding: 2rem 1rem;
+  padding-top: 80px; /* Space for fixed header */
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* Stack form and list vertically */
+  align-items: center;
+  width: 100%;
+  max-width: 900px; 
+  gap: 2.5rem; /* Space between form and list */
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem; /* Reduced margin as form/list have their own */
+  text-align: center;
+}
+
+/* Ticket Form Styles */
+.ticketForm {
+  background-color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 700px; /* Form can be a bit narrower */
+}
+
+.ticketForm h2 {
+  font-size: 1.8rem;
+  color: #0070f3;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.formError, .formSuccess {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+.formError { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+.formSuccess { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formGroup label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.formGroup input[type="text"],
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Ensure padding doesn't make it overflow */
+}
+.formGroup textarea {
+  resize: vertical; /* Allow vertical resize only */
+}
+
+.formRow {
+  display: flex;
+  gap: 1.5rem;
+}
+.formRow .formGroup {
+  flex: 1; /* Make form groups in a row share space */
+}
+
+.submitButton {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%; /* Make button full width of its container */
+  margin-top: 0.5rem; /* Space above button */
+}
+.submitButton:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
+.submitButton:hover:not(:disabled) {
+  background-color: #005bb5;
+}
+
+/* Ticket List Styles */
+.ticketListContainer {
+  background-color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+}
+
+.ticketListContainer h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.75rem;
+}
+
+.noTickets {
+  text-align: center;
+  color: #555;
+  font-size: 1.1rem;
+  padding: 1rem 0;
+}
+
+.ticketList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ticketItem {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.ticketItem:hover {
+  border-color: #0070f3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.ticketItem.selectedTicket {
+  border-color: #0070f3;
+  box-shadow: 0 0 0 2px #0070f3 inset; /* Indicate selection */
+}
+
+
+.ticketHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.ticketSubject {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #005bb5;
+}
+
+.ticketStatus {
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  color: #fff;
+  text-transform: uppercase;
+}
+.statusOpen { background-color: #28a745; } /* Green */
+.statusInProgress { background-color: #ffc107; color: #333; } /* Yellow */
+.statusClosed, .statusResolved { background-color: #6c757d; } /* Gray */
+
+
+.ticketDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem; /* Row and column gap */
+  font-size: 0.85rem;
+  color: #555;
+}
+.ticketCategory {
+  font-style: italic;
+}
+.ticketPriority {
+  font-weight: 500;
+}
+.priorityHigh { color: #dc3545; }
+.priorityNormal { color: #007bff; }
+.priorityLow { color: #28a745; }
+
+
+.ticketDescriptionExpanded {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #eee;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap; /* Respect newlines */
+}
+.ticketDescriptionExpanded p {
+    margin-bottom: 0.3rem;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main {
+    gap: 1.5rem;
+  }
+  .pageTitle {
+    font-size: 2.2rem;
+  }
+  .ticketForm, .ticketListContainer {
+    padding: 1.5rem;
+  }
+  .formRow {
+    flex-direction: column;
+    gap: 0; /* Remove gap as items stack */
+  }
+  .formRow .formGroup {
+    margin-bottom: 1.25rem; /* Ensure spacing when stacked */
+  }
+}
+
+@media (max-width: 480px) {
+    .ticketHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+    .ticketStatus {
+        align-self: flex-end;
+    }
+}

@@ -1,0 +1,216 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f2f5;
+  padding: 2rem 1rem;
+  padding-top: 80px; /* Space for fixed header */
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; 
+  gap: 2.5rem;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.section {
+  background-color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  color: #0070f3;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.75rem;
+  text-align: center;
+}
+
+.errorText, .formError { /* Shared error style */
+  color: #dc3545;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.successText, .formSuccess { /* Shared success style */
+    color: #155724;
+    background-color: #d4edda;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+
+/* Your Referral Info Section */
+.yourReferralInfo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.yourReferralInfo p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.referralCodeBox {
+  background-color: #e9ecef;
+  padding: 1rem;
+  border-radius: 6px;
+  display: inline-flex; /* Align items inline */
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px dashed #0070f3;
+}
+.referralCodeBox span {
+    font-size: 1rem;
+    color: #444;
+}
+.referralCode {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #005bb5;
+  letter-spacing: 1px;
+}
+.copyButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.copyButton:hover {
+  background-color: #005bb5;
+}
+
+.referralCount {
+  font-size: 1rem;
+  color: #28a745; /* Green for positive reinforcement */
+  margin-top: 1rem;
+}
+.referralCount strong {
+    font-size: 1.1rem;
+}
+
+.benefitsInfo {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #e6f7ff; /* Light blue */
+  border-radius: 6px;
+  border: 1px solid #0070f3;
+}
+.benefitsInfo h3 {
+  text-align: center;
+  color: #005bb5;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+.benefitsInfo ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 400px; /* Center list items */
+}
+.benefitsInfo ul li {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+.benefitsInfo ul li strong {
+  color: #0070f3;
+}
+.benefitsInfo small {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: #555;
+}
+
+
+/* Apply Code Section */
+.applyCodeForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center form elements */
+  gap: 1rem;
+}
+
+.formGroup { /* Reusable form group style */
+  width: 100%;
+  max-width: 400px; /* Control width of input group */
+}
+.formGroup label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+.applyCodeInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  text-transform: uppercase;
+}
+
+.applyButton {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #28a745; /* Green for apply */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  max-width: 400px; /* Match input width */
+}
+.applyButton:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
+.applyButton:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+
+@media (max-width: 768px) {
+  .main {
+    gap: 1.5rem;
+  }
+  .pageTitle {
+    font-size: 2.2rem;
+  }
+  .section {
+    padding: 1.5rem;
+  }
+  .referralCodeBox {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

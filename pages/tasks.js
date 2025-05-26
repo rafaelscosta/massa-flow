@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import styles from '../styles/Tasks.module.css'; // To be created
-import { trackFrontendEvent } from '../lib/frontendAnalytics'; // For screen_viewed
+import styles from '../styles/Tasks.module.css';
+import { trackFrontendEvent } from '../lib/frontendAnalytics';
+import { useRouter } from 'next/router'; // To redirect
+import Link from 'next/link'; // For linking to pricing
 
 // Hardcoded userId for MVP
 const MVP_USER_ID = 'user1';
@@ -10,12 +12,55 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'new', 'read'
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [loadingSubscription, setLoadingSubscription] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchSubscriptionAndTasks() {
+      setLoadingSubscription(true);
+      try {
+        const subResponse = await fetch(`/api/billing/subscription-status?userId=${MVP_USER_ID}`);
+        if (!subResponse.ok) throw new Error('Falha ao buscar status da assinatura.');
+        const subData = await subResponse.json();
+        setSubscriptionStatus(subData);
+
+        if (subData.tier === 'free' || subData.status !== 'active') {
+          // For MVP, allow 'essencial' to access tasks as well, or make it truly premium
+          // Let's say 'profissional' or 'premium' are required
+          if (subData.tier !== 'profissional' && subData.tier !== 'premium') {
+            trackFrontendEvent('paywall_triggered', { 
+                userId: MVP_USER_ID, 
+                feature: 'tasks_page', 
+                current_tier: subData.tier 
+            });
+            // Redirect or show paywall message - for now, just block loading tasks
+            setLoading(false); // Stop tasks loading
+            setLoadingSubscription(false);
+            return; // Exit early
+          }
+        }
+        // If subscription is adequate, load tasks
+        await fetchTasks();
+      } catch (err) {
+        console.error("Error checking subscription or fetching tasks:", err);
+        setError(err.message);
+        setTasks([]);
+      } finally {
+        setLoadingSubscription(false);
+        // setLoading(false); // fetchTasks will set this
+      }
+    }
+    
+    trackFrontendEvent('screen_viewed', { screen_name: 'tasks_page', userId: MVP_USER_ID });
+    fetchSubscriptionAndTasks();
+
+  }, []); // Removed fetchTasks from here as it's called conditionally
 
   const fetchTasks = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError('');
       const response = await fetch(`/api/tasks?userId=${MVP_USER_ID}`);
       if (!response.ok) {
         const errorData = await response.json();
@@ -32,10 +77,6 @@ export default function TasksPage() {
     }
   };
 
-  useEffect(() => {
-    trackFrontendEvent('screen_viewed', { screen_name: 'tasks_page', userId: MVP_USER_ID });
-    fetchTasks();
-  }, []);
 
   const handleMarkAsRead = async (taskId) => {
     try {

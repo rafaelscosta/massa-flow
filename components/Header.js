@@ -85,6 +85,26 @@ export default function Header() {
               </a>
             </Link>
           </li>
+          <li className={styles.navItem}>
+            <Link href="/pricing" legacyBehavior>
+              <a>Planos</a>
+            </Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link href="/account" legacyBehavior>
+              <a>Minha Conta</a>
+            </Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link href="/support" legacyBehavior>
+              <a>Suporte</a>
+            </Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link href="/referrals" legacyBehavior>
+              <a>Indicações</a>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
