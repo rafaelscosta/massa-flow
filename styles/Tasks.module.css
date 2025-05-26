@@ -1,0 +1,236 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f2f5;
+  padding-top: 80px; /* Space for fixed header + a bit more */
+}
+
+.main {
+  padding: 2rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px; /* Wider for task list */
+}
+
+.title {
+  margin: 0 0 2rem 0;
+  line-height: 1.15;
+  font-size: 2.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.error {
+  color: #dc3545;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.noTasks {
+  color: #555;
+  margin-top: 2rem;
+  font-size: 1.2rem; /* Slightly larger for emphasis */
+  text-align: center;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.tasksList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Space between task cards */
+}
+
+.taskCard {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-left: 5px solid #0070f3; /* Default accent color */
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.taskCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.taskType {
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px; /* More rectangular badge */
+  color: #fff;
+}
+
+/* Specific type colors for accent and badge */
+.taskCard.no_show_risk_alert_border, /* Class for border */
+.taskType.no_show_risk_alert { /* Class for badge */
+  background-color: #dc3545; /* Red for high risk alert */
+  border-left-color: #dc3545; /* For taskCard if specific class applied */
+}
+.taskCard .taskType.no_show_risk_alert { /* Ensure badge has red background */
+   background-color: #dc3545;
+}
+
+
+.taskType.defaultType { /* Fallback type color */
+  background-color: #6c757d;
+}
+.taskCard.defaultType { /* Fallback border color for taskCard */
+    border-left-color: #6c757d;
+}
+
+
+.taskStatus {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #17a2b8; /* Info blue for 'new' status */
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px; /* Pill shape */
+  text-transform: uppercase;
+}
+
+.taskMessage {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  white-space: pre-wrap; /* Respect newlines in message if any */
+}
+
+.taskFooter {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on small screens */
+  gap: 0.3rem 1rem; /* Row and column gap */
+  font-size: 0.8rem;
+  color: #666;
+  border-top: 1px dashed #eee;
+  padding-top: 0.75rem;
+  margin-top: 1rem;
+}
+
+.taskFooter small {
+  background-color: #f0f0f0;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+}
+
+.filterControls {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filterControls button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.filterControls button:hover {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+
+.filterControls button.activeFilter {
+  background-color: #0070f3;
+  color: #fff;
+  border-color: #0070f3;
+}
+
+.taskIcon {
+  font-size: 1.5rem; /* Make icon placeholder more visible */
+  margin-right: 0.75rem;
+  min-width: 25px; /* Give it some space */
+  text-align: center;
+}
+
+/* Status specific styles for the whole card */
+.taskCard.status_read {
+  background-color: #f8f9fa; /* Lighter background for read tasks */
+  border-left-width: 3px; /* Thinner border for read tasks */
+  opacity: 0.8; /* Slightly faded out */
+}
+.taskCard.status_read .taskMessage {
+  color: #555; /* Darker gray for read message */
+}
+
+.taskCard.status_archived {
+  opacity: 0.6;
+  border-left-style: dashed;
+}
+
+/* Status badge specific colors */
+.status_badge_new { background-color: #17a2b8; color: #fff; } /* Info blue */
+.status_badge_read { background-color: #6c757d; color: #fff; } /* Gray */
+.status_badge_archived { background-color: #adb5bd; color: #333; } /* Lighter gray */
+
+
+.markAsReadButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  color: #fff;
+  background-color: #28a745; /* Green */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.markAsReadButton:hover {
+  background-color: #218838; /* Darker green */
+}
+
+.default_border { /* Ensure there's a fallback if specific border class isn't set */
+    border-left-color: #0070f3; /* Default accent color */
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main {
+    max-width: 100%; /* Allow full width */
+    padding: 1.5rem 0.5rem;
+  }
+  .title {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+  .taskHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .taskStatus {
+    align-self: flex-end; /* Move status to the right if header stacks */
+  }
+}

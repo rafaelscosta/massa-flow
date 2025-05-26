@@ -112,6 +112,33 @@
   background-color: #005bb5;
 }
 
+.promptCard {
+  background-color: #e6f7ff; /* Light blue background */
+  border: 1px solid #0070f3;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+  width: 100%;
+  max-width: 600px; /* Consistent with subtitle max-width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.promptCard h3 {
+  font-size: 1.3rem;
+  color: #005bb5; /* Darker blue */
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.promptCard p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .title {

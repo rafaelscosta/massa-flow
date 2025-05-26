@@ -53,11 +53,36 @@
   text-decoration: none;
 }
 
+/* Styles for task badge container and badge itself */
+.navLinkWithBadgeContainer {
+  position: relative; /* For badge positioning */
+  display: inline-flex; /* Align text and badge naturally */
+  align-items: center;
+  padding-right: 5px; /* Add a little space if badge is very close or large */
+}
+
+.taskBadge {
+  /* position: absolute; /* Absolute positioning can be tricky with dynamic content */
+  /* Instead, let's use relative positioning within the flex container */
+  margin-left: 8px; /* Space between link text and badge */
+  background-color: #dc3545; /* Red for notifications */
+  color: white;
+  border-radius: 10px; /* More pill-like shape */
+  padding: 3px 7px; /* Adjust padding for size */
+  font-size: 0.75rem; /* Smaller font for badge number */
+  font-weight: bold;
+  line-height: 1; /* Ensure text is vertically centered */
+  /* min-width: 18px; /* Ensure circle shape for single digit - might not be needed for pill */
+  text-align: center;
+  /* border: 1px solid #fff; /* Optional white border for separation */
+}
+
+
 /* Basic active link styling (can be improved with Next.js Router) */
 .navItem a.active::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -2px; /* Adjust to be just below the text, considering padding */
   left: 0;
   width: 100%;
   height: 2px;
@@ -77,6 +102,11 @@
   }
   .navList {
     gap: 1rem;
+  }
+  .taskBadge {
+    margin-left: 6px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
   }
 }
 
@@ -99,5 +129,13 @@
   }
   .navItem a {
     padding: 0.3rem 0;
+  }
+  .navLinkWithBadgeContainer {
+    padding-right: 0; /* Reset padding for stacked layout if needed */
+  }
+  .taskBadge {
+    /* If link text and badge stack, absolute might be better, or adjust margin */
+    /* For simplicity, keeping current logic, test in stacked view */
+     margin-left: 5px; 
   }
 }

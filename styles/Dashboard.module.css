@@ -63,19 +63,81 @@
   color: #555; /* Slightly lighter text color */
 }
 
-.metricPlaceholder {
+.metricValue { /* Renamed from metricPlaceholder */
   margin-top: 1rem;
   padding: 1rem;
-  background-color: #e9ecef; /* Light background for placeholder */
+  background-color: #e9ecef; /* Light background for value display */
   border-radius: 5px;
   text-align: center;
 }
 
-.metricPlaceholder span {
-  font-size: 1.5rem;
+.metricValue span {
+  font-size: 1.8rem; /* Slightly larger font for actual values */
   font-weight: bold;
   color: #0070f3; /* Blue for metric values */
 }
+
+.error { /* Style for error messages on dashboard */
+  color: #dc3545;
+  margin: 1rem 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Next Steps Section */
+.nextStepsSection {
+  width: 100%;
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.nextStepsSection h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.nextStepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.nextStepCard {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  text-align: left;
+  color: #333; /* Ensure link text color is inherited or set */
+}
+
+.nextStepCard:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+  text-decoration: none; /* Remove underline on hover for the card itself */
+}
+
+.nextStepCard h3 {
+  font-size: 1.25rem;
+  color: #0070f3;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.nextStepCard p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 0;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -98,7 +160,7 @@
   .card h2 {
     font-size: 1.1rem;
   }
-  .metricPlaceholder span {
+  .metricValue span { /* Renamed from metricPlaceholder */
     font-size: 1.25rem;
   }
 }

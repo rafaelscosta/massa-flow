@@ -5,14 +5,18 @@ Bem-vindo ao MVP (Minimum Viable Product) do MassaFlow! Este guia detalha como c
 ## Visão Geral do MVP
 
 O MassaFlow MVP foca em:
-1.  **Onboarding do Usuário:** Um fluxo de 5 passos para coletar informações sobre o tipo de prática, objetivos, conectar ferramentas (simulado) e ativar rotinas de comunicação.
+1.  **Onboarding Progressivo do Usuário:** Um fluxo simplificado de 3 passos para configuração inicial, com funcionalidades avançadas introduzidas gradualmente.
 2.  **Telas Principais:**
-    *   **Painel de Resultados:** Exibe métricas chave (placeholders).
-    *   **Minhas Ferramentas:** Gerencia integrações com ferramentas externas (simulado).
-    *   **Rotinas de Atendimento:** Permite ativar/desativar e (futuramente) personalizar rotinas de comunicação.
-3.  **Orchestrator de Backend:** Um script que simula o processamento de rotinas (confirmações, lembretes, follow-ups) com base em dados de exemplo.
-4.  **Vault de Credenciais:** Um sistema básico para armazenar "segredos" de forma criptografada (ex: API keys).
-5.  **Analytics de Engajamento:** Um sistema simples para logar eventos de interação do usuário e do sistema.
+    *   **Painel de Resultados:** Exibe métricas de ROI reais (Taxa de Presença, Receita Gerada, Tempo Economizado).
+    *   **Minhas Ferramentas:** Gerencia integrações com ferramentas externas (simulado, com simulação de falha para alertas).
+    *   **Rotinas de Atendimento:** Permite ativar/desativar rotinas de comunicação.
+    *   **Histórico de Comunicação:** Visualiza logs de mensagens enviadas.
+    *   **Minhas Tarefas:** Hub central para alertas e tarefas geradas pelo sistema.
+3.  **Orchestrator de Backend:** Script que simula o processamento de rotinas de comunicação e registra logs.
+4.  **Vault de Credenciais:** Sistema básico para armazenar "segredos" de forma criptografada.
+5.  **Analytics de Engajamento:** Sistema simples para logar eventos de interação.
+6.  **Intelligence Engine Básico:** Calcula risco de cancelamento e "health score" de clientes.
+7.  **Automações Inteligentes e Alertas:** Gera tarefas para o terapeuta com base em eventos (ex: agendamento de cliente de alto risco, falha de conexão, métricas baixas).
 
 ## 1. Pré-requisitos
 
@@ -78,156 +82,261 @@ ou
 yarn dev
 ```
 Isso geralmente iniciará a aplicação em `http://localhost:3000`.
+**Nota:** Para todas as funcionalidades de frontend no MVP, o `userId` é fixado como `'user1'`. Isso significa que todos os dados visualizados e interações no frontend (Dashboard, Histórico, Tarefas) são relativos a `user1`.
 
-## 5. Testando o Onboarding
+## 5. Testando as Funcionalidades do MassaFlow
 
-Após iniciar a aplicação web, acesse o fluxo de onboarding no seu navegador:
-*   **URL:** `http://localhost:3000/onboarding`
+Esta seção detalha como testar as diversas funcionalidades implementadas.
 
-Siga os 5 passos, fazendo seleções conforme desejar. Ao final, você será redirecionado para o Dashboard.
+### 5.1 Onboarding Progressivo
 
-## 6. Testando as Telas Principais
+O fluxo de onboarding foi simplificado para 3 passos iniciais.
 
-Acesse as seguintes URLs para visualizar as telas principais:
-*   **Dashboard:** `http://localhost:3000/`
-*   **Minhas Ferramentas:** `http://localhost:3000/integrations`
-*   **Rotinas de Atendimento:** `http://localhost:3000/automations`
+*   **Acesso:** `http://localhost:3000/onboarding`
+*   **Fluxo:**
+    1.  **Tipo de Prática:** Selecione entre "Autônomo", "Clínica", ou "Spa".
+    2.  **Objetivos Principais:** Defina seus desafios.
+    3.  **Conclusão Rápida:** Tela de validação que informa sobre rotinas básicas (confirmação 24h, lembrete 1h) pré-ativadas e sugere próximos passos.
+*   **Verificação:**
+    *   Ao final, `onboardingData` para `user1` (simulado) terá `practiceType`, `objectives`, e `routinesActivated: ['confirm_24h', 'reminder_1h']`.
+    *   Log `onboarding_completed` em `engagement_events.log` com `flow_type: 'progressive'`.
+*   **Prompts Pós-Onboarding:**
+    *   **Dashboard (`/`):** Seção "Próximos Passos Recomendados" com links para `/integrations` e `/automations`.
+    *   **Minhas Ferramentas (`/integrations`):** Prompt para conectar ferramentas se nenhuma estiver "Conectado" (estado simulado inicial).
+    *   **Rotinas de Atendimento (`/automations`):** Prompt para ativar "Follow-up pós-sessão" se estiver inativa.
 
-## 7. Executando o Orchestrator
+### 5.2 Dashboard com Métricas de ROI Reais
 
-O script do orchestrator simula o processamento de automações de backend (confirmações, lembretes, follow-ups).
+*   **Acesso:** `http://localhost:3000/`
+*   **Funcionalidade:** Exibe métricas de ROI para `user1` (Taxa de Presença, Receita Total Gerada, Tempo Admin. Economizado).
+*   **Preparação de Dados para `user1` em `lib/db.js`:**
+    *   **Agendamentos (`appointments`):**
+        *   Certifique-se que `lib/db.js` contém uma variedade de agendamentos para `user1` com diferentes `clientId`s (`client1`, `client2`, `client5_user1`).
+        *   Use status `attended` e `no_show` para calcular a Taxa de Presença. O `lib/db.js` já inclui exemplos (ex: `appt3`, `appt8_user1_noshow`, `appt9_user1_attended`, `appt10_user1_attended_client2`, `appt12_user1_client1_attended_past_60d`, `appt14_user1_client1_attended_past_15d`, `appt16_user1_client2_attended_past_50d`, `appt18_user1_client2_attended_past_10d`, `appt19_user1_client5_attended_past_80d`, `appt20_user1_client5_noshow_past_25d`).
+        *   Inclua `baseRevenue` (numérico) para agendamentos `attended` para calcular a Receita Gerada.
+    *   **Logs de Comunicação (`communicationLogs`):**
+        *   Execute `node lib/orchestrator.js` para gerar logs de comunicação para `user1`. Cada execução adiciona mais logs, impactando "Tempo Admin. Economizado".
+*   **Teste:**
+    1.  Após preparar os dados e rodar o orchestrator, acesse o Dashboard.
+    2.  Verifique se as métricas refletem os dados em `lib/db.js` e a lógica em `lib/metricsCalculator.js`.
+    3.  **Alerta de Métrica Baixa:** Para testar, ajuste os dados de `user1` em `lib/db.js` para que a taxa de presença seja < 60% (com >= 5 agendamentos relevantes - `attended` ou `no_show`). Por exemplo, 2 `attended` e 3 `no_show`. Reinicie o servidor Next.js e acesse o Dashboard. Uma tarefa "ALERTA: TAXA DE PRESENÇA BAIXA" deve ser gerada (ver em `/tasks`). Lembre-se de restaurar os dados para um estado mais saudável depois, se desejar.
 
-Para executá-lo, abra um novo terminal (não o que está rodando o Next.js), navegue até a raiz do projeto e execute:
+### 5.3 Minhas Ferramentas e Alerta de Falha de Conexão
 
-```bash
-node lib/orchestrator.js
-```
+*   **Acesso:** `http://localhost:3000/integrations`
+*   **Funcionalidade:** Simula conexão/desconexão de ferramentas. Gera alerta em caso de falha simulada.
+*   **Teste:**
+    1.  Clique em "Conectar" para a ferramenta "E-mail".
+    2.  **Verificação:** Um `alert` do navegador deve surgir: "Falha ao conectar E-mail. Uma tarefa de alerta foi criada para você."
+    3.  Acesse `/tasks`: uma nova tarefa "ALERTA: FALHA DE CONEXÃO" para `user1` deve estar listada.
 
-**Interpretando a Saída:**
-O console mostrará:
-*   O início e fim do ciclo de automação.
-*   A hora atual.
-*   Para cada automação processada (CONFIRMATION, REMINDER, FOLLOW-UP):
-    *   O destinatário simulado (email).
-    *   O ID do usuário e do agendamento.
-    *   A mensagem final formatada.
-    *   Uma mensagem `DB_SIM:` indicando uma atualização simulada no banco de dados.
-*   Eventos de analytics sendo logados (ex: `automation_cycle_started`, `automation_processed_by_orchestrator`).
+### 5.4 Histórico de Comunicação
 
-Os dados dos agendamentos em `lib/db.js` são configurados para que algumas automações sejam acionadas com base na hora atual da execução do script.
+*   **Acesso:** `http://localhost:3000/history`
+*   **Preparação:** Execute `node lib/orchestrator.js` para gerar `communicationLogs` em `lib/db.js`.
+*   **Teste:**
+    1.  A página usa `MVP_USER_ID = 'user1'`.
+    2.  Insira um `clientId` de `user1` (ex: `client1`, `client2`) e clique "Buscar".
+    3.  Verifique se o histórico é exibido corretamente.
+    4.  **API (Opcional):** Teste `GET /api/communications?userId=user1&clientId=client1`.
 
-## 8. Testando o Vault
+### 5.5 Intelligence Engine (Clientes de Risco e Saúde do Cliente)
 
-O script `testVault.js` demonstra as funcionalidades de armazenamento e recuperação segura de "segredos".
+*   **APIs:**
+    *   `GET /api/intelligence/risky-clients?userId=<ID>[&cancellationThreshold=<0.0-1.0>&minAppointments=<N>]`
+    *   `GET /api/intelligence/client-health?userId=<ID>&clientId=<ID>`
+*   **Preparação de Dados para `user1` em `lib/db.js`:**
+    *   `lib/db.js` foi atualizado com um histórico variado para `user1` e seus clientes (`client1`, `client2`, `client5_user1`). `client2` (Ana Pereira) tem um histórico com mais cancelamentos (`cancelled_by_client`). `client5_user1` (Lucas Martins) tem um `no_show` recente.
+*   **Teste:**
+    1.  **Risky Clients:**
+        *   Acesse: `http://localhost:3000/api/intelligence/risky-clients?userId=user1` (no navegador ou `curl`).
+        *   **Verificação:** `client2` (Ana Pereira) deve estar listado, pois tem 2 `cancelled_by_client` e 2 `attended` (total 4 relevante, taxa 50%, acima do default de 30% e min 3 agendamentos).
+    2.  **Client Health:**
+        *   Acesse: `http://localhost:3000/api/intelligence/client-health?userId=user1&clientId=client1`. Analise o `healthScore` (deve ser ~60 com os dados atuais e datas recentes).
+        *   Teste com `clientId=client2` (~55) e `clientId=client5_user1` (~35) para comparar. (Scores exatos dependem da data atual vs datas dos agendamentos).
 
-Para executá-lo, em um terminal na raiz do projeto:
+### 5.6 Automação Inteligente (Prevenção de No-Show com Alerta de Tarefa)
 
-```bash
-node testVault.js
-```
+*   **API Envolvida:** `POST /api/appointments`
+*   **Teste:**
+    1.  **Confirme Cliente de Alto Risco:** Verifique se `client2` é de alto risco para `user1` (ver 5.5.1).
+    2.  **Crie um Agendamento (via `curl` ou Postman):**
+        ```bash
+        curl -X POST http://localhost:3000/api/appointments \
+        -H "Content-Type: application/json" \
+        -d '{
+              "userId": "user1",
+              "clientId": "client2", 
+              "startDateTime": "YYYY-MM-DDTHH:MM:SS.000Z", # Use uma data futura
+              "endDateTime": "YYYY-MM-DDTHH:MM:SS.000Z",   # Use uma data futura
+              "serviceName": "Consulta de Alto Risco",
+              "baseRevenue": 150
+            }'
+        ```
+        (Substitua `YYYY-MM-DDTHH:MM:SS.000Z` por datas válidas, ex: `2023-12-25T10:00:00.000Z`)
+    3.  **Verificações:**
+        *   **Console do Servidor Next.js:** Deve mostrar logs indicando "High-risk client client2 booked. Task created..." e "Therapist task added... type: no_show_risk_alert".
+        *   **Página de Tarefas (`/tasks`):** Uma nova tarefa "ALERTA: RISCO DE NO-SHOW" deve aparecer para `user1`, detalhando o agendamento de `client2`.
+        *   **Badge no Header:** O contador de novas tarefas no header deve ser incrementado.
 
-**Interpretando a Saída:**
-O script realizará vários testes, como:
-*   Armazenar e recuperar segredos.
-*   Listar serviços com segredos para um usuário.
-*   Excluir segredos.
-*   O resultado de cada teste (SUCCESS/FAILURE) será impresso no console.
-*   Ao final, o arquivo `data/secureVault.json` (onde os segredos são armazenados de forma criptografada) deve estar limpo dos dados de teste. Você pode inspecioná-lo *durante* a execução para ver os dados criptografados, se conseguir pausar o script ou se ele for mais longo.
+### 5.7 Sistema de Alertas Aprimorado (Página de Tarefas)
 
-## 9. Verificando os Analytics
+*   **Acesso:** `http://localhost:3000/tasks` (para `user1`)
+*   **Funcionalidades:**
+    1.  **Geração de Tarefas (ver seções 5.2, 5.3, 5.6):**
+        *   Falha de conexão da ferramenta "Email".
+        *   Taxa de presença baixa (Dashboard).
+        *   Agendamento de cliente de alto risco.
+    2.  **Indicador no Header:** Verifique o badge de contagem de tarefas 'new'.
+    3.  **Visualização e Distinção Visual:**
+        *   Verifique se os diferentes tipos de tarefas (`no_show_risk_alert`, `tool_connection_failed`, `low_attendance_rate_alert`) são exibidos com ícones (emojis) e nomes distintos.
+        *   Alertas de risco têm destaque (borda vermelha).
+    4.  **Filtros:** Teste os filtros "Todas", "Novas", "Lidas".
+    5.  **Marcar como Lida:**
+        *   Clique em "Marcar como Lida" para uma tarefa 'new'.
+        *   **Verificação:** A tarefa deve mudar visualmente (ex: ficar mais clara), seu status mudar para "READ", e o contador no badge do header deve diminuir. A tarefa deve sumir do filtro "Novas".
 
-Todos os eventos de engajamento (interações de frontend e processamento de backend) são registrados no arquivo `engagement_events.log` na raiz do projeto.
+### 5.8 Orchestrator (Backend)
 
-*   **Localização:** `./engagement_events.log`
-*   **Formato:** Cada linha é um objeto JSON representando um evento, contendo `timestamp`, `eventName`, `userId`, e `properties`.
+*   **Execução:** `node lib/orchestrator.js`
+*   **Verificação:**
+    *   Logs no console (mensagens enviadas, logs de comunicação).
+    *   Eventos em `engagement_events.log`.
+    *   Dados em `communicationLogs` (visíveis em `/history`).
 
-Você pode abrir este arquivo em um editor de texto para inspecionar os eventos que foram registrados durante seus testes na aplicação web e ao executar o orchestrator.
+### 5.9 Vault (Armazenamento Seguro)
+
+*   **Execução:** `node testVault.js`
+*   **Verificação:** Saída do console (SUCESSO para testes), aviso sobre ENV VARS (se não configuradas). `data/secureVault.json` é usado temporariamente.
+
+### 5.10 Analytics (Log de Engajamento)
+
+*   **Arquivo:** `engagement_events.log` (na raiz do projeto)
+*   **Verificação:** Durante todos os testes acima, este arquivo deve ser populado com eventos relevantes.
 
 ---
 
-## 10. Roteiro de Teste para Massoterapeutas
+## 6. Roteiro de Teste para Massoterapeutas (Piloto)
 
-Este roteiro foi desenhado para ajudar massoterapeutas a testar as funcionalidades chave do MassaFlow MVP e fornecer feedback sobre a usabilidade e proposta de valor.
+Este roteiro foi desenhado para ajudar massoterapeutas a testar as funcionalidades chave do MassaFlow MVP e fornecer feedback sobre a usabilidade e proposta de valor. **Para este piloto, todos os testadores usarão os dados do `user1` (Maria Masso, Autônoma).**
 
-**Contexto:** Você é um massoterapeuta explorando uma nova ferramenta para ajudar a automatizar sua comunicação com clientes e gerenciar sua prática.
+**Contexto:** Você é Maria Masso (`user1`), explorando o MassaFlow para otimizar sua prática.
 
-**Tarefas:**
+**Tarefas e Perguntas de Feedback:**
 
-1.  **Primeiros Passos e Configuração Inicial:**
-    *   **Tarefa:** Inicie a aplicação web (`npm run dev`) e acesse o fluxo de onboarding: `http://localhost:3000/onboarding`.
-    *   **Cenário:** Imagine que você é um profissional autônomo.
-        *   Na **Etapa 1 (Tipo de Prática)**, selecione "Autônomo/Consultório Individual".
-        *   Na **Etapa 2 (Seu Maior Desafio)**, selecione "Reduzir no-shows (faltas de clientes)" e "Economizar tempo administrativo".
+1.  **Onboarding Inicial (Se ainda não o fez):**
+    *   **Ação:** Acesse `http://localhost:3000/onboarding`.
+        *   Selecione "Autônomo/Consultório Individual".
+        *   Selecione "Reduzir no-shows" e "Economizar tempo administrativo" como objetivos.
+        *   Complete o onboarding (3 passos rápidos).
     *   **Feedback:**
-        *   O processo de seleção foi claro?
-        *   As opções de desafio fazem sentido para sua prática?
+        *   O processo de onboarding foi rápido e claro?
+        *   A tela final de "Configuração Inicial Concluída" explicou bem os próximos passos?
 
-2.  **Conectando Ferramentas (Simulado):**
-    *   **Tarefa:** Prossiga para a **Etapa 3 (Conecte suas Ferramentas)** no onboarding.
-    *   **Cenário:** Simule a conexão com "Google Agenda" e "WhatsApp Business" clicando nos respectivos botões "Conectar".
+2.  **Explorando o Dashboard e Métricas:**
+    *   **Ação:** Acesse o Dashboard (`http://localhost:3000/`). (Nota: Pode ser necessário executar `node lib/orchestrator.js` antes para gerar dados para "Tempo Admin. Economizado").
+    *   **Verificação:** Observe as métricas: "Taxa de Presença", "Receita Total Gerada", "Tempo Admin. Economizado". (Estes dados são baseados no histórico simulado de `user1`).
+        *   *Para "Taxa de Presença Baixa":* Se a equipe do MassaFlow instruir, modifique os dados em `lib/db.js` para `user1` ter mais "no_show" do que "attended" (ex: 3 no_shows, 2 attended de 5 agendamentos) e reinicie o servidor. Ao visitar o Dashboard, um alerta deve ser gerado em "Minhas Tarefas".
     *   **Feedback:**
-        *   A interface para conectar ferramentas é intuitiva (mesmo sendo uma simulação)?
-        *   Quais outras ferramentas você esperaria ver aqui?
+        *   As métricas exibidas são relevantes para sua prática? Como você as usaria?
+        *   A seção "Próximos Passos Recomendados" é útil?
 
-3.  **Ativando Rotinas Iniciais e Personalização (Simulada):**
-    *   **Tarefa:** Avance para a **Etapa 4 (Ative suas Primeiras Rotinas)**.
-    *   **Cenário:** As rotinas ("Confirmação de consulta 24h antes", "Lembrete de chegada 1h antes", "Follow-up pós-sessão 24h depois") devem estar ativadas por padrão com base na sua escolha de "Autônomo".
-    *   **Verificação:** Os nomes e descrições das rotinas parecem adequados para um profissional autônomo?
+3.  **Gerenciando Ferramentas e Lidando com Alertas:**
+    *   **Ação:** Vá para "Minhas Ferramentas" (`/integrations`).
+        *   Tente "Conectar" a ferramenta "E-mail". Você verá um `alert` do navegador sobre a falha simulada.
+    *   **Ação:** Vá para "Minhas Tarefas" (`/tasks`).
+        *   Você deve ver uma tarefa "ALERTA: FALHA DE CONEXÃO".
     *   **Feedback:**
-        *   As rotinas sugeridas são úteis para seus desafios?
-        *   Você gostaria de personalizar as mensagens padrão (ex: "Olá [Cliente]...") neste momento do onboarding ou prefere fazer isso depois?
+        *   O alerta sobre a falha de conexão foi claro?
+        *   A página "Minhas Tarefas" é intuitiva para entender os alertas?
 
-4.  **Finalizando o Onboarding e Explorando o Painel:**
-    *   **Tarefa:** Complete o onboarding (Etapa 5) e seja redirecionado para o "Painel de Resultados".
-    *   **Verificação:** Observe as métricas exibidas (Taxa de Presença, Receita Adicional, Tempo Economizado).
+4.  **Entendendo Seus Clientes (Inteligência):**
+    *   **Contexto:** A equipe MassaFlow informa que, no sistema, `client2` (Ana Pereira) tem um histórico de mais cancelamentos, e `client5_user1` (Lucas Martins) tem um no-show recente.
+    *   **Feedback (Conceitual, pois a UI não expõe diretamente esses scores ainda):**
+        *   Quão útil seria para você saber o "health score" de um cliente antes de uma sessão?
+        *   Saber quais clientes têm alto risco de cancelamento ajudaria você a tomar ações preventivas? Que tipo de ações?
+
+5.  **Simulando Agendamento de Cliente de Alto Risco:**
+    *   **Ação (Peça para a equipe MassaFlow simular ou, se instruído, use `curl`):**
+        Simule um novo agendamento para `user1` com `client2` (Ana Pereira), que é de alto risco.
+        ```bash
+        # Exemplo de comando para simulação (a equipe pode executar isso):
+        # curl -X POST http://localhost:3000/api/appointments -H "Content-Type: application/json" -d '{"userId": "user1", "clientId": "client2", "startDateTime": "YYYY-MM-DDTHH:MM:SSZ", "endDateTime": "YYYY-MM-DDTHH:MM:SSZ", "serviceName": "Teste Risco", "baseRevenue": 100}'
+        ```
+        (Use uma data/hora futura válida)
+    *   **Verificação:** Após a simulação, vá para "Minhas Tarefas" (`/tasks`). Você deve ver um novo "ALERTA: RISCO DE NO-SHOW" para o agendamento de Ana Pereira.
     *   **Feedback:**
-        *   O que você esperaria ver de mais importante em um painel de resultados? (Lembre-se que os dados atuais são placeholders).
-        *   A navegação do onboarding para o painel foi fluida?
+        *   Este tipo de alerta proativo é valioso?
+        *   O que você faria ao receber este alerta?
 
-5.  **Gerenciando suas Ferramentas (Pós-Onboarding):**
-    *   **Tarefa:** No menu de navegação (topo da página), vá para "Minhas Ferramentas".
-    *   **Verificação:** Verifique se "Google Agenda" e "WhatsApp Business" aparecem como "Conectado" (refletindo a simulação do onboarding). Tente "Desconectar" uma delas.
+6.  **Interagindo com a Lista de Tarefas:**
+    *   **Ação:** Na página "Minhas Tarefas" (`/tasks`):
+        *   Observe o contador de tarefas novas no cabeçalho (se houver tarefas 'new').
+        *   Use os filtros ("Todas", "Novas", "Lidas").
+        *   Clique em "Marcar como Lida" em algumas tarefas.
     *   **Feedback:**
-        *   A página de gerenciamento de ferramentas é clara?
-        *   O que mais você gostaria de fazer nesta tela?
+        *   A organização das tarefas e os filtros são úteis?
+        *   A ação "Marcar como Lida" funciona como esperado? O contador no header atualiza?
 
-6.  **Gerenciando suas Rotinas de Atendimento (Pós-Onboarding):**
-    *   **Tarefa:** No menu de navegação, acesse "Rotinas".
-    *   **Cenário:** As rotinas que você viu no onboarding devem estar listadas.
-    *   **Verificação:** Tente desativar a rotina de "Follow-up pós-sessão" usando o botão de toggle. Depois, reative-a.
+7.  **Revisando o Histórico de Comunicação:**
+    *   **Ação:** Execute `node lib/orchestrator.js` no terminal para garantir que há logs. Depois, vá para "Histórico" (`/history`).
+        *   Digite `client1` no campo de busca e clique "Buscar".
+        *   Repita para `client2`.
     *   **Feedback:**
-        *   A interface para ativar/desativar rotinas é fácil de usar?
-        *   Você gostaria de ver opções para editar o horário de envio ou a mensagem diretamente nesta tela?
+        *   As informações no histórico de comunicação são claras e úteis?
+        *   Você consegue encontrar facilmente as mensagens enviadas para um cliente específico?
 
-7.  **Feedback Geral sobre o MVP:**
-    *   Qual foi sua primeira impressão geral sobre o MassaFlow MVP?
-    *   Houve alguma parte do processo que foi confusa ou difícil?
-    *   Você consegue ver o potencial desta ferramenta para ajudar na sua prática diária, mesmo neste estágio inicial?
-    *   Quais funcionalidades você considera mais importantes para serem desenvolvidas a seguir?
-    *   Algum outro comentário ou sugestão?
+8.  **Feedback Geral sobre os Novos Recursos (Inteligência e Alertas):**
+    *   Qual sua impressão sobre as funcionalidades de "Inteligência" (risco de cliente, health score conceitual) e "Alertas/Tarefas"?
+    *   Você acha que esses recursos podem ajudar a reduzir no-shows, economizar seu tempo, ou melhorar o relacionamento com clientes?
+    *   Quais desses novos recursos você considera mais valiosos?
+    *   Alguma sugestão para melhorar esses recursos ou a forma como são apresentados?
 
 **Como Fornecer Feedback:**
-*   Anote suas respostas e observações para cada tarefa.
-*   Se encontrar algum erro inesperado (algo que impede você de continuar uma tarefa), por favor, descreva-o.
-*   Compartilhe seu feedback consolidado com a equipe do MassaFlow.
+*   Anote suas respostas, observações e qualquer dificuldade encontrada.
+*   Compartilhe seu feedback detalhado com a equipe do MassaFlow.
 
-Obrigado por ajudar a moldar o futuro do MassaFlow!
+Obrigado por sua participação no piloto do MassaFlow!
 
-## 11. Relatório do Smoke Test Interno
+## 7. Relatório do Smoke Test Interno (Pós S5-S6)
 
-*   **Data do Teste:** 2023-11-02 (Data da execução da tarefa)
+*   **Data do Teste:** 2023-11-02 (Data da execução da tarefa de documentação)
 *   **Testador:** Agente de Engenharia de Software (IA)
-*   **Status Geral:** O MVP está funcionando conforme as funcionalidades definidas e as instruções de configuração. Nenhum erro crítico encontrado que impeça o teste das funcionalidades principais.
+*   **Status Geral:** O MVP, incluindo funcionalidades de S3-S4 e S5-S6, está funcionando conforme as funcionalidades definidas e as instruções de configuração. Nenhum erro crítico encontrado.
 
-*   **Variáveis de Ambiente (Vault):** Testado com e sem as variáveis `MASSAFLOW_VAULT_KEY` e `MASSAFLOW_VAULT_IV`. O sistema se comportou como esperado: usou valores padrão e emitiu aviso quando não definidas; usou as variáveis quando definidas (verificado manualmente, não parte do log automático).
-*   **Onboarding (UI):** Fluxo completo de 5 passos funcional. Seleções são refletidas visualmente. Redirecionamento ao final OK.
-*   **Telas Principais (UI):** Dashboard, Minhas Ferramentas, Rotinas de Atendimento carregam corretamente. Interações básicas (toggles, botões simulados) funcionam.
-*   **Orchestrator (`node lib/orchestrator.js`):** Executa sem erros. A saída do console corresponde aos dados de exemplo em `lib/db.js` e à lógica de automação. Eventos de analytics são logados.
-*   **Vault (`node testVault.js`):** O script de teste executa e todos os casos de teste passam. O arquivo `data/secureVault.json` é gerenciado corretamente (criado, populado, limpo).
-*   **Analytics (`engagement_events.log`):** O arquivo é criado e todos os eventos de frontend e backend especificados são registrados corretamente em formato JSON.
+*   **Onboarding Progressivo:** Fluxo de 3 passos funcional. Prompts no Dashboard, Integrações e Rotinas aparecem condicionalmente como esperado.
+*   **Dashboard com Métricas Reais:** Métricas para `user1` são carregadas da API e exibidas corretamente. Alerta de "Taxa de Presença Baixa" é gerado em `/tasks` quando os dados de `user1` em `lib/db.js` são ajustados para atender ao critério (ex: 2 `attended`, 3 `no_show` de 5 relevantes).
+*   **Minhas Ferramentas (Alerta de Falha):** Simulação de falha ao conectar "E-mail" gera corretamente uma tarefa em `/tasks`.
+*   **Histórico de Comunicação:** Página `/history` busca e exibe logs para `user1` e `clientId` especificado, após `node lib/orchestrator.js` ser executado.
+*   **Intelligence Engine APIs:**
+    *   `GET /api/intelligence/risky-clients?userId=user1`: Retorna `client2` (Ana Pereira) como alto risco com base nos dados de exemplo (2 cancelamentos / 4 agendamentos relevantes = 50% taxa).
+    *   `GET /api/intelligence/client-health?userId=user1&clientId=client1`: Retorna score ~60.
+    *   `GET /api/intelligence/client-health?userId=user1&clientId=client2`: Retorna score ~55.
+    *   `GET /api/intelligence/client-health?userId=user1&clientId=client5_user1`: Retorna score ~35 (devido a no-show recente). (Scores exatos dependem da data atual).
+*   **Automação Inteligente (Prevenção de No-Show):** `POST /api/appointments` para `user1` e `client2` (alto risco) gera corretamente uma tarefa "ALERTA: RISCO DE NO-SHOW" em `/tasks`.
+*   **Sistema de Alertas Aprimorado (`/tasks`):**
+    *   Todos os tipos de alertas gerados (falha de conexão, métrica baixa, risco de no-show) aparecem em `/tasks`.
+    *   O badge no header atualiza corretamente com a contagem de tarefas 'new'.
+    *   Filtros ("Todas", "Novas", "Lidas") funcionam.
+    *   "Marcar como Lida" atualiza o status da tarefa, a UI da página `/tasks`, e o badge no header.
+*   **Demais Funcionalidades (Orchestrator, Vault, Analytics):** Continuam funcionando como nos testes anteriores. `engagement_events.log` registra os novos eventos de alerta e interações.
 
-*   **Observações/Pequenos Problemas (Não Críticos para MVP):**
-    1.  **Estado das Integrações/Rotinas nas Telas Principais:** As telas "Minhas Ferramentas" e "Rotinas de Atendimento" usam dados de estado iniciais estáticos (`initialIntegrations`, `initialAutomations`). Elas não refletem dinamicamente as escolhas feitas durante o onboarding (ex: tipo de prática ou quais ferramentas foram "conectadas" no onboarding). Isso é uma limitação conhecida do MVP, onde o foco está na interface e no fluxo de cada funcionalidade de forma um pouco mais isolada em termos de estado persistente. A funcionalidade de *dentro* de cada tela (toggles, etc.) funciona.
-    2.  **Consistência de Nomes de Rotinas:** Os IDs de rotinas (`confirm_24h`, etc.) são consistentes entre templates JSON, orchestrator e analytics. Os nomes ("Confirmação de consulta 24h antes") também são consistentes.
+*   **Observações:**
+    1.  **Estado Simulado:** A natureza simulada do estado de "conexão" de ferramentas em `/integrations` e o estado "ativo" de rotinas em `/automations` (que são baseados em `useState` e não persistem) significa que os prompts podem reaparecer após recarregar a página, mesmo que o usuário tenha interagido. Isso é esperado no MVP.
+    2.  **Dados para Teste de Inteligência:** A qualidade dos resultados do Intelligence Engine depende fortemente da variedade e volume dos dados em `lib/db.js`. Os dados adicionados para `user1` permitem testar os cenários.
 
-O smoke test indica que o MVP está pronto para o teste com usuários, conforme o roteiro proposto.
+O smoke test indica que as funcionalidades de S5-S6 estão integradas e prontas para o piloto com usuários, conforme o roteiro de teste proposto.
+
+## 8. Preparando Dados para o Piloto
+
+Para um piloto com múltiplos usuários (ex: 10 massoterapeutas), idealmente cada um teria dados isolados.
+
+*   **Abordagem Atual (`lib/db.js`):**
+    1.  **`users`:** Adicionar os 10 usuários do piloto.
+    2.  **Dados por Usuário:** Para cada novo `userId`, criar `clients`, `appointments` (com histórico variado), e executar o `orchestrator` (adaptado para focar em um `userId` ou simular para todos) para gerar `communicationLogs`.
+    3.  **Frontend `MVP_USER_ID`:** Para o piloto, a forma mais simples é instruir todos os testadores a agirem como se fossem `user1`, cujos dados estão mais completos. Alternativamente, um seletor de `userId` básico poderia ser adicionado ao frontend (fora do escopo atual) para permitir que cada testador visualize "seus" dados, se estes forem populados em `lib/db.js`.
+*   **Considerações:**
+    *   **Templates:** `practiceType` deve ser definido para cada usuário piloto para que os templates de mensagem corretos sejam usados.
+*   **Abordagem Futura (Pós-MVP):** Banco de dados real com autenticação e particionamento de dados por `userId`.
+
+Para o piloto atual, instruir todos os testadores a usarem a perspectiva de `user1` é o mais viável, focando no feedback sobre o fluxo e funcionalidades.

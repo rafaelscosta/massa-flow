@@ -31,18 +31,27 @@ export default function Automations() {
   const [automations, setAutomations] = useState(initialAutomations);
   // Assuming userId might be available from a global context or session in a real app
   const userId = 'user123_mvp'; // Placeholder for MVP
+  const [showFollowUpPrompt, setShowFollowUpPrompt] = useState(false);
 
   useEffect(() => {
     trackFrontendEvent('screen_viewed', { screen_name: 'automations' }, userId);
-  }, [userId]);
+    // Check if follow-up routine is active
+    const followUpRoutine = automations.find(a => a.id === 'follow_up_24h');
+    setShowFollowUpPrompt(followUpRoutine ? !followUpRoutine.isActive : true); // Show if not found or not active
+  }, [userId, automations]); // Re-check if automations state changes
 
   const toggleAutomation = (automationId, currentStatus, routineName) => {
     const newStatus = !currentStatus;
-    setAutomations(
-      automations.map((automation) =>
-        automation.id === automationId ? { ...automation, isActive: newStatus } : automation
-      )
+    const updatedAutomations = automations.map((automation) =>
+      automation.id === automationId ? { ...automation, isActive: newStatus } : automation
     );
+    setAutomations(updatedAutomations);
+
+    // Update prompt visibility based on new state for follow-up
+    if (automationId === 'follow_up_24h') {
+      setShowFollowUpPrompt(!newStatus);
+    }
+
     trackFrontendEvent(
       'routine_status_changed',
       { routine_name: routineName, status: newStatus ? 'activated' : 'deactivated', context: 'automations_page' },

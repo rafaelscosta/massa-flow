@@ -1,66 +1,65 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import styles from '../../styles/Onboarding.module.css'; // Will create this file later
-import { useEffect, useState } from 'react'; // Added useEffect
-import Step0PracticeType from '../../components/onboarding/Step0PracticeType'; // New Step
+import { useEffect, useState } from 'react';
+import Step0PracticeType from '../../components/onboarding/Step0PracticeType';
 import Step1Objectives from '../../components/onboarding/Step1Objectives';
-import Step2Tools from '../../components/onboarding/Step2Tools';
-import Step3Routines from '../../components/onboarding/Step3Routines';
-import Step4Validation from '../../components/onboarding/Step4Validation';
+// Step2Tools and Step3Routines are removed from the initial onboarding flow
+import Step2FinalValidation from '../../components/onboarding/Step2FinalValidation'; // New final step
 import { useRouter } from 'next/router';
-import { trackFrontendEvent } from '../../lib/frontendAnalytics'; // Import analytics helper
+import { trackFrontendEvent } from '../../lib/frontendAnalytics';
 
-const TOTAL_STEPS = 5; // Increased total steps
+const TOTAL_STEPS = 3; // Reduced to 3 steps
 
 export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [startTime, setStartTime] = useState(null); // For time_taken_seconds
+  const [startTime, setStartTime] = useState(null);
   const [onboardingData, setOnboardingData] = useState({
-    practiceType: '', // Added practiceType
+    practiceType: '',
     objectives: [],
-    toolsConnected: [],
-    routinesActivated: [],
-    // We can store loaded template messages here if needed, or load them directly in Step3
+    toolsConnected: [], // Will remain empty for initial onboarding
+    routinesActivated: ['confirm_24h', 'reminder_1h'], // Pre-activated basic routines
   });
   const router = useRouter();
 
   useEffect(() => {
-    // Track start of onboarding and record start time
-    trackFrontendEvent('screen_viewed', { screen_name: 'onboarding_step_' + currentStep });
+    trackFrontendEvent('screen_viewed', { screen_name: 'onboarding_step_' + currentStep, step_number: currentStep });
     if (currentStep === 1 && !startTime) {
-        setStartTime(Date.now());
-        trackFrontendEvent('onboarding_started');
+      setStartTime(Date.now());
+      trackFrontendEvent('onboarding_started', { flow_type: 'progressive' });
     }
-     // Track each step view
-    trackFrontendEvent('screen_viewed', { screen_name: `onboarding_step_${currentStep}`, step_number: currentStep });
-
   }, [currentStep, startTime]);
-
 
   const updateOnboardingData = (stepData) => {
     setOnboardingData((prevData) => ({ ...prevData, ...stepData }));
   };
 
   const nextStep = () => {
-    // Basic validation for practice type selection
     if (currentStep === 1 && !onboardingData.practiceType) {
       alert("Por favor, selecione seu tipo de prática para continuar.");
       return;
     }
+    if (currentStep === 2 && onboardingData.objectives.length === 0) {
+      // Optional: could prompt user to select at least one objective, or allow skipping
+      // For a more agile flow, allow skipping for now.
+    }
+
     if (currentStep < TOTAL_STEPS) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Finish onboarding - redirect to dashboard or a success page
       const timeTakenSeconds = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
+      // Simulate saving onboardingData to a user profile or backend
+      console.log("Progressive Onboarding Completed. Data:", onboardingData);
+      
       trackFrontendEvent('onboarding_completed', {
-        // userId: 'user123_mvp', // Replace with actual userId if available
+        flow_type: 'progressive',
         practice_type: onboardingData.practiceType,
         objectives: onboardingData.objectives,
-        tools_connected: onboardingData.toolsConnected,
-        routines_activated: onboardingData.routinesActivated,
+        // tools_connected will be empty or not sent
+        routines_activated: onboardingData.routinesActivated, // Basic pre-activated routines
         time_taken_seconds: timeTakenSeconds,
       });
-      router.push('/');
+      router.push('/'); // Redirect to dashboard
     }
   };
 
@@ -71,19 +70,15 @@ export default function Onboarding() {
   };
 
   const renderStep = () => {
-    // Pass userId if available, for now it's handled by trackFrontendEvent default
-    const commonProps = { data: onboardingData, updateData: updateOnboardingData /* userId: 'user123_mvp' */ };
+    const commonProps = { data: onboardingData, updateData: updateOnboardingData };
     switch (currentStep) {
-      case 1: // New Step 0 is now Step 1
+      case 1:
         return <Step0PracticeType {...commonProps} />;
       case 2:
         return <Step1Objectives {...commonProps} />;
       case 3:
-        return <Step2Tools {...commonProps} />;
-      case 4:
-        return <Step3Routines {...commonProps} />;
-      case 5:
-        return <Step4Validation {...commonProps} />; // Validation step might not need updateData
+        // Pass practiceType to Step2FinalValidation to display relevant info
+        return <Step2FinalValidation practiceType={onboardingData.practiceType} />;
       default:
         return <Step0PracticeType {...commonProps} />;
     }
