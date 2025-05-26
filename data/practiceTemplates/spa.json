@@ -1,0 +1,20 @@
+{
+  "practiceType": "Spa/Hotel",
+  "routines": {
+    "confirm_24h": {
+      "name": "Confirmação de Reserva de Tratamento (24h)",
+      "description": "Envio de confirmação elegante da reserva do tratamento ao hóspede/cliente.",
+      "defaultMessage": "Prezado(a) Sr.(a) [Cliente], sua reserva para o tratamento [Nome do Tratamento] no [Nome do Spa] em [Data] às [Hora] está confirmada. Aguardamos para proporcionar uma experiência relaxante e rejuvenescedora. Cordialmente, Equipe [Nome do Spa]."
+    },
+    "reminder_1h": {
+      "name": "Lembrete de Experiência (1h)",
+      "description": "Envio de lembrete sofisticado próximo ao horário do tratamento.",
+      "defaultMessage": "Sr.(a) [Cliente], sua experiência no [Nome do Spa] está programada para hoje às [Hora]. Permita-se desfrutar de um momento de puro bem-estar. Nossa equipe está pronta para recebê-lo(a)."
+    },
+    "follow_up_24h": {
+      "name": "Feedback e Convite de Retorno (Pós-experiência)",
+      "description": "Envio de mensagem para coletar feedback e incentivar futuras visitas.",
+      "defaultMessage": "Esperamos que sua experiência no [Nome do Spa] tenha sido memorável, Sr.(a) [Cliente]. Valorizamos seu feedback e gostaríamos de convidá-lo(a) a retornar em breve para descobrir nossos outros tratamentos exclusivos. [Link para Feedback ou Novas Ofertas]."
+    }
+  }
+}

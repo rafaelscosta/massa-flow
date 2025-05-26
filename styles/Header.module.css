@@ -1,0 +1,103 @@
+.header {
+  width: 100%;
+  background-color: #fff; /* White background for header */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 0 2rem; /* Padding on the sides */
+  position: fixed; /* Keep header at the top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensure header is above other content */
+  height: 60px; /* Fixed height for the header */
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  width: 100%;
+  max-width: 1000px; /* Max width for nav content */
+  margin: 0 auto; /* Center the nav content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0070f3; /* Blue color for logo */
+  text-decoration: none;
+}
+
+.logo:hover {
+  text-decoration: none; /* No underline on hover for logo */
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 1.5rem; /* Space between nav items */
+}
+
+.navItem a {
+  text-decoration: none;
+  color: #333; /* Dark gray for nav links */
+  font-size: 1rem;
+  padding: 0.5rem 0; /* Padding for clickable area */
+  position: relative; /* For active indicator */
+}
+
+.navItem a:hover {
+  color: #0070f3; /* Blue on hover */
+  text-decoration: none;
+}
+
+/* Basic active link styling (can be improved with Next.js Router) */
+.navItem a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #0070f3;
+}
+
+/* Responsive adjustments for header */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 1rem; /* Less padding on smaller screens */
+  }
+  .logo {
+    font-size: 1.3rem;
+  }
+  .navItem a {
+    font-size: 0.9rem;
+  }
+  .navList {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    flex-direction: column; /* Stack logo and nav items */
+    align-items: flex-start;
+  }
+  .header {
+    height: auto; /* Adjust height for stacked items */
+    padding: 0.75rem 1rem;
+  }
+  .logo {
+    margin-bottom: 0.5rem;
+  }
+  .navList {
+    width: 100%;
+    justify-content: space-around; /* Distribute items */
+    gap: 0.5rem;
+  }
+  .navItem a {
+    padding: 0.3rem 0;
+  }
+}

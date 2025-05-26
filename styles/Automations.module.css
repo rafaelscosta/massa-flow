@@ -1,0 +1,181 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
+  align-items: center;
+  background-color: #f0f2f5;
+  padding-top: 3rem; /* Add padding to the top */
+}
+
+.main {
+  padding: 2rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; /* Slightly narrower max-width for better readability */
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  line-height: 1.15;
+  font-size: 2.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.subtitle {
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+  max-width: 600px;
+}
+
+.automationsList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Space between automation cards */
+}
+
+.automationCard {
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  padding: 1.5rem 2rem; /* More horizontal padding */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
+}
+
+.automationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.automationHeader h2 {
+  margin: 0;
+  font-size: 1.25rem; /* Slightly larger title for automation */
+  color: #0070f3;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Switch Toggle Styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px; /* Smaller switch */
+  height: 28px; /* Smaller switch */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 28px; /* Rounded slider */
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px; /* Smaller handle */
+  width: 20px;  /* Smaller handle */
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #28a745; /* Green when active */
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #28a745;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px); /* Adjusted translation for smaller switch */
+}
+
+.placeholders {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem; /* Space between placeholder buttons */
+}
+
+.placeholderButton {
+  padding: 0.5rem 0.8rem; /* Smaller buttons */
+  font-size: 0.8rem;
+  color: #0070f3;
+  background-color: transparent;
+  border: 1px solid #0070f3;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.placeholderButton:hover {
+  background-color: #0070f3;
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  .automationCard {
+    padding: 1.25rem 1.5rem;
+  }
+  .automationHeader h2 {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  .automationHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem; /* Space between title and toggle when stacked */
+  }
+  .automationHeader h2 {
+    font-size: 1.1rem;
+  }
+  .placeholders {
+    flex-direction: column; /* Stack buttons on very small screens */
+  }
+  .placeholderButton {
+    width: 100%;
+    text-align: center;
+  }
+}

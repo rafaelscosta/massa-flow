@@ -1,0 +1,20 @@
+{
+  "practiceType": "Autônomo/Consultório Individual",
+  "routines": {
+    "confirm_24h": {
+      "name": "Confirmação de consulta 24h antes",
+      "description": "Envia um lembrete automático para o cliente confirmar a consulta agendada.",
+      "defaultMessage": "Olá [Cliente]! Só para confirmar sua massagem/sessão no dia [Data] às [Hora]. Mal posso esperar! Att, [Seu Nome]."
+    },
+    "reminder_1h": {
+      "name": "Lembrete de chegada 1h antes",
+      "description": "Envia um lembrete amigável pouco antes do horário da consulta.",
+      "defaultMessage": "Oi [Cliente], sua sessão de massagem/terapia é hoje às [Hora]! Te vejo em breve. Att, [Seu Nome]."
+    },
+    "follow_up_24h": {
+      "name": "Follow-up pós-sessão 24h depois",
+      "description": "Envia uma mensagem de acompanhamento para saber como o cliente está se sentindo.",
+      "defaultMessage": "Espero que tenha se sentido ótimo(a) após a sessão, [Cliente]! Adoraria saber como foi sua experiência. Se puder, me conte! Att, [Seu Nome]."
+    }
+  }
+}

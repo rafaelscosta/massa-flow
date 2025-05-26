@@ -1,0 +1,146 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
+  align-items: center;
+  background-color: #f0f2f5;
+  padding-top: 3rem; /* Add padding to the top */
+}
+
+.main {
+  padding: 2rem 0; /* Adjusted padding */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+.title {
+  margin: 0 0 0.5rem 0; /* Reduced bottom margin */
+  line-height: 1.15;
+  font-size: 2.5rem; /* Adjusted font size */
+  text-align: center;
+  color: #333;
+}
+
+.subtitle {
+  margin-bottom: 2.5rem; /* Increased bottom margin */
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+  max-width: 600px;
+}
+
+.grid {
+  display: flex;
+  align-items: stretch; /* Make cards same height */
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.card {
+  margin: 0.5rem; /* Adjusted margin */
+  padding: 1.5rem;
+  text-align: center; /* Center content within card */
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 220px; /* Adjusted width */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribute space for button */
+}
+
+.logo {
+  width: 50px; /* Fixed logo size */
+  height: 50px;
+  margin-bottom: 1rem;
+  align-self: center; /* Center logo */
+}
+
+.card h2 {
+  margin: 0.5rem 0;
+  font-size: 1.15rem; /* Adjusted font size */
+  color: #0070f3;
+}
+
+.status {
+  margin: 0.5rem 0 1rem 0; /* Adjusted margin */
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px; /* Pill shape for status */
+  display: inline-block; /* Allow padding and centering */
+}
+
+.conectado {
+  color: #28a745;
+  background-color: rgba(40, 167, 69, 0.1); /* Light green background */
+}
+
+.desconectado {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1); /* Light red background */
+}
+
+.requeratencao { /* Corrected class name */
+  color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.1); /* Light yellow background */
+}
+
+.button {
+  padding: 0.6rem 1rem; /* Adjusted padding */
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  margin-top: auto; /* Push button to the bottom */
+}
+
+.button:hover {
+  background-color: #005bb5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  .grid {
+    flex-direction: column;
+    align-items: center; /* Center cards in column layout */
+  }
+  .card {
+    width: 70%; /* Wider cards on smaller screens */
+    margin-bottom: 1.5rem; /* Add margin between stacked cards */
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+  }
+  .card {
+    width: 90%;
+  }
+  .card h2 {
+    font-size: 1.05rem;
+  }
+  .button {
+    font-size: 0.85rem;
+  }
+}

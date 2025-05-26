@@ -1,0 +1,20 @@
+{
+  "practiceType": "Clínica/Centro de Estética",
+  "routines": {
+    "confirm_24h": {
+      "name": "Confirmação de agendamento (24h)",
+      "description": "Envio de confirmação automática do agendamento ao cliente.",
+      "defaultMessage": "Prezado(a) [Cliente], confirmamos seu agendamento para [Serviço] em [Data] às [Hora] na [Nome da Clínica]. Para dúvidas, responda a esta mensagem ou ligue para [Telefone da Clínica]."
+    },
+    "reminder_1h": {
+      "name": "Lembrete de agendamento (1h)",
+      "description": "Envio de lembrete próximo ao horário do serviço agendado.",
+      "defaultMessage": "Olá [Cliente], seu agendamento para [Serviço] na [Nome da Clínica] é hoje às [Hora]. Estamos à sua espera!"
+    },
+    "follow_up_24h": {
+      "name": "Pesquisa de satisfação (Pós-atendimento)",
+      "description": "Envio de mensagem para avaliação do serviço e feedback.",
+      "defaultMessage": "Agradecemos por escolher a [Nome da Clínica], [Cliente]. Gostaríamos de saber sua opinião sobre o seu [Serviço] realizado em [Data]. Por favor, responda a esta breve pesquisa: [Link da Pesquisa]."
+    }
+  }
+}

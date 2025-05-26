@@ -1,0 +1,104 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5; /* Light gray background */
+}
+
+.main {
+  padding: 5rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 900px; /* Max width for content */
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 3rem; /* Slightly smaller title */
+  text-align: center;
+  color: #333; /* Darker text color */
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem; /* Space between cards */
+}
+
+.card {
+  margin: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  width: 250px; /* Fixed width for cards */
+  background-color: #fff; /* White background for cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card h2 {
+  margin: 0 0 0.5rem 0; /* Smaller margin bottom for h2 */
+  font-size: 1.25rem; /* Smaller font size for card titles */
+  color: #0070f3; /* Blue for card titles */
+}
+
+.card p {
+  margin: 0;
+  font-size: 0.9rem; /* Smaller font size for card paragraph */
+  line-height: 1.5;
+  color: #555; /* Slightly lighter text color */
+}
+
+.metricPlaceholder {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #e9ecef; /* Light background for placeholder */
+  border-radius: 5px;
+  text-align: center;
+}
+
+.metricPlaceholder span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0070f3; /* Blue for metric values */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid {
+    width: 100%;
+    flex-direction: column;
+  }
+  .card {
+    width: 80%; /* Cards take more width on smaller screens */
+  }
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+  .card h2 {
+    font-size: 1.1rem;
+  }
+  .metricPlaceholder span {
+    font-size: 1.25rem;
+  }
+}
